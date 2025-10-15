@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="EtherCAT_test" type="latest_motor_driver" name="latest_motor_driver" launch-prefix="ethercat_grant" output="screen"/>
+</launch>

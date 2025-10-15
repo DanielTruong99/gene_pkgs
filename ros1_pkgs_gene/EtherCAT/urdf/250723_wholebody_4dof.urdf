@@ -1,0 +1,1255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="250723_wholebody_4dof">
+  <link
+    name="Pelvis">
+    <inertial>
+      <origin
+        xyz="-0.022983 -7.6E-06 0.033173"
+        rpy="0 0 0" />
+      <mass
+        value="6.8511" />
+      <inertia
+        ixx="0.068072"
+        ixy="1.26E-06"
+        ixz="0.0010765"
+        iyy="0.024935"
+        iyz="-1.39E-06"
+        izz="0.085149" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/Pelvis.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/Pelvis.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="Torso">
+    <inertial>
+      <origin
+        xyz="-0.00917069 0 0.38856721"
+        rpy="0 0 0" />
+      <mass
+        value="24.1139074" />
+      <inertia
+        ixx="0.95758028"
+        ixy="-9.3E-07"
+        ixz="-0.03795433"
+        iyy="0.89981253"
+        iyz="-2.68E-06"
+        izz="0.12305946" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/Torso.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/Torso.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Torso_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0.0825"
+      rpy="0 0 0" />
+    <parent
+      link="Pelvis" />
+    <child
+      link="Torso" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.0472"
+      upper="1.0472"
+      effort="120"
+      velocity="13" />
+  </joint>
+  <link
+    name="L_sp">
+    <inertial>
+      <origin
+        xyz="0.00211618 0.04904287 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.47300519" />
+      <inertia
+        ixx="0.00090569"
+        ixy="-6.452E-05"
+        ixz="0"
+        iyy="0.00095615"
+        iyz="0"
+        izz="0.00137265" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_sp.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_sp.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_sp_joint"
+    type="revolute">
+    <origin
+      xyz="0 0.16 0.36424"
+      rpy="0.34907 0 0" />
+    <parent
+      link="Torso" />
+    <child
+      link="L_sp" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-3.1416"
+      upper="1.0472"
+      effort="60"
+      velocity="16" />
+  </joint>
+  <link
+    name="L_sr">
+    <inertial>
+      <origin
+        xyz="0.00144618 -6.887E-05 -0.07950711"
+        rpy="0 0 0" />
+      <mass
+        value="2.03357559" />
+      <inertia
+        ixx="0.0202665"
+        ixy="4.34E-06"
+        ixz="-0.00022366"
+        iyy="0.0200148"
+        iyz="-4.773E-05"
+        izz="0.00233683" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_sr.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_sr.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_sr_joint"
+    type="revolute">
+    <origin
+      xyz="0 0.082 0"
+      rpy="0 0 0" />
+    <parent
+      link="L_sp" />
+    <child
+      link="L_sr" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="1.9199"
+      effort="60"
+      velocity="16" />
+  </joint>
+  <link
+    name="L_sy">
+    <inertial>
+      <origin
+        xyz="4.804E-05 0.00187674 -0.04533128"
+        rpy="0 0 0" />
+      <mass
+        value="0.60397734" />
+      <inertia
+        ixx="0.0006015"
+        ixy="4.7E-07"
+        ixz="2E-08"
+        iyy="0.00048894"
+        iyz="3.81E-06"
+        izz="0.00047661" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_sy.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_sy.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_sy_joint"
+    type="revolute">
+    <origin
+      xyz="0 0 -0.2505"
+      rpy="0 0 0" />
+    <parent
+      link="L_sr" />
+    <child
+      link="L_sy" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.5708"
+      upper="1.5708"
+      effort="34"
+      velocity="8.5" />
+  </joint>
+  <link
+    name="L_ep">
+    <inertial>
+      <origin
+        xyz="0 -5.201E-05 -0.07595118"
+        rpy="0 0 0" />
+      <mass
+        value="0.29726014" />
+      <inertia
+        ixx="0.00170525"
+        ixy="0"
+        ixz="0"
+        iyy="0.00153441"
+        iyz="1.17E-06"
+        izz="0.0003043" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_ep.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_ep.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_ep_joint"
+    type="revolute">
+    <origin
+      xyz="0 0 -0.0545"
+      rpy="0 0 0" />
+    <parent
+      link="L_sy" />
+    <child
+      link="L_ep" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-1.9199"
+      upper="1.0472"
+      effort="34"
+      velocity="8.5" />
+  </joint>
+  <link
+    name="L_ee">
+    <inertial>
+      <origin
+        xyz="0 0 -0.00350891"
+        rpy="0 0 0" />
+      <mass
+        value="0.15356561" />
+      <inertia
+        ixx="5.676E-05"
+        ixy="0"
+        ixz="0"
+        iyy="5.677E-05"
+        iyz="0"
+        izz="6.558E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_ee.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_ee.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_ee_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 -0.3"
+      rpy="0 0 0" />
+    <parent
+      link="L_ep" />
+    <child
+      link="L_ee" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="R_sp">
+    <inertial>
+      <origin
+        xyz="0.0021162 -0.049043 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.47301" />
+      <inertia
+        ixx="0.00090569"
+        ixy="6.452E-05"
+        ixz="0"
+        iyy="0.00095615"
+        iyz="0"
+        izz="0.0013727" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_sp.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_sp.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_sp_joint"
+    type="fixed">
+    <origin
+      xyz="0 -0.16 0.36424"
+      rpy="-0.34907 0 0" />
+    <parent
+      link="Torso" />
+    <child
+      link="R_sp" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-3.1416"
+      upper="1.0472"
+      effort="60"
+      velocity="16" />
+  </joint>
+  <link
+    name="R_sr">
+    <inertial>
+      <origin
+        xyz="0.0014462 -6.887E-05 -0.079507"
+        rpy="0 0 0" />
+      <mass
+        value="2.0336" />
+      <inertia
+        ixx="0.020267"
+        ixy="4.34E-06"
+        ixz="-0.00022366"
+        iyy="0.020015"
+        iyz="-4.773E-05"
+        izz="0.0023368" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_sr.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_sr.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_sr_joint"
+    type="fixed">
+    <origin
+      xyz="0 -0.082 0"
+      rpy="0 0 0" />
+    <parent
+      link="R_sp" />
+    <child
+      link="R_sr" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-1.9199"
+      upper="0"
+      effort="60"
+      velocity="16" />
+  </joint>
+  <link
+    name="R_sy">
+    <inertial>
+      <origin
+        xyz="-4.804E-05 -0.00187674 -0.04533128"
+        rpy="0 0 0" />
+      <mass
+        value="0.60397734" />
+      <inertia
+        ixx="0.0006015"
+        ixy="4.7E-07"
+        ixz="-2E-08"
+        iyy="0.00048894"
+        iyz="-3.81E-06"
+        izz="0.00047661" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_sy.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_sy.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_sy_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 -0.2505"
+      rpy="0 0 0" />
+    <parent
+      link="R_sr" />
+    <child
+      link="R_sy" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.5708"
+      upper="1.5708"
+      effort="34"
+      velocity="8.5" />
+  </joint>
+  <link
+    name="R_ep">
+    <inertial>
+      <origin
+        xyz="0 5.201E-05 -0.07595118"
+        rpy="0 0 0" />
+      <mass
+        value="0.29726014" />
+      <inertia
+        ixx="0.00170525"
+        ixy="0"
+        ixz="0"
+        iyy="0.00153441"
+        iyz="-1.17E-06"
+        izz="0.0003043" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_ep.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_ep.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_ep_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 -0.0545"
+      rpy="0 0 0" />
+    <parent
+      link="R_sy" />
+    <child
+      link="R_ep" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-1.9199"
+      upper="1.0472"
+      effort="34"
+      velocity="8.5" />
+  </joint>
+  <link
+    name="R_ee">
+    <inertial>
+      <origin
+        xyz="0 0 -0.00350891"
+        rpy="0 0 0" />
+      <mass
+        value="0.15356561" />
+      <inertia
+        ixx="5.676E-05"
+        ixy="0"
+        ixz="0"
+        iyy="5.677E-05"
+        iyz="0"
+        izz="6.558E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_ee.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_ee.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_ee_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 -0.3"
+      rpy="0 0 0" />
+    <parent
+      link="R_ep" />
+    <child
+      link="R_ee" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="L_hip">
+    <inertial>
+      <origin
+        xyz="-0.076146 0 -0.055914"
+        rpy="0 0 0" />
+      <mass
+        value="1.5262" />
+      <inertia
+        ixx="0.0046117"
+        ixy="2E-08"
+        ixz="-0.0016412"
+        iyy="0.0052735"
+        iyz="1.6E-07"
+        izz="0.0033606" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_hip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_hip_joint"
+    type="fixed">
+    <origin
+      xyz="0 0.1175 -0.0067"
+      rpy="0 0 0" />
+    <parent
+      link="Pelvis" />
+    <child
+      link="L_hip" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.7854"
+      upper="0.61087"
+      effort="120"
+      velocity="23" />
+  </joint>
+  <link
+    name="L_hip2">
+    <inertial>
+      <origin
+        xyz="0.068139 -0.057497 -0.014589"
+        rpy="0 0 0" />
+      <mass
+        value="1.3384" />
+      <inertia
+        ixx="0.0022183"
+        ixy="0.00067105"
+        ixz="0.000265"
+        iyy="0.0033687"
+        iyz="-0.00016238"
+        izz="0.0029916" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_hip2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_hip2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_hip2_joint"
+    type="fixed">
+    <origin
+      xyz="-0.0763 0 -0.084"
+      rpy="0 0 0" />
+    <parent
+      link="L_hip" />
+    <child
+      link="L_hip2" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.69813"
+      upper="0.5236"
+      effort="120"
+      velocity="23" />
+  </joint>
+  <link
+    name="L_thigh">
+    <inertial>
+      <origin
+        xyz="-2.011E-05 0.01997163 -0.08648865"
+        rpy="0 0 0" />
+      <mass
+        value="4.91" />
+      <inertia
+        ixx="0.07879745"
+        ixy="-3.9E-07"
+        ixz="8.53E-06"
+        iyy="0.07930467"
+        iyz="-0.00223626"
+        izz="0.00978443" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_thigh.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_thigh_joint"
+    type="fixed">
+    <origin
+      xyz="0.081 -0.0148 -0.0185"
+      rpy="0 0 0" />
+    <parent
+      link="L_hip2" />
+    <child
+      link="L_thigh" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-2.4435"
+      upper="0.34907"
+      effort="120"
+      velocity="23" />
+  </joint>
+  <link
+    name="L_calf">
+    <inertial>
+      <origin
+        xyz="-2.873E-05 0.0160649 -0.08508373"
+        rpy="0 0 0" />
+      <mass
+        value="1.4" />
+      <inertia
+        ixx="0.01800444"
+        ixy="2.57E-06"
+        ixz="-5.17E-06"
+        iyy="0.01837787"
+        iyz="-1.435E-05"
+        izz="0.00086118" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_calf.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_calf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_calf_joint"
+    type="fixed">
+    <origin
+      xyz="0 0.00025 -0.35"
+      rpy="0 0 0" />
+    <parent
+      link="L_thigh" />
+    <child
+      link="L_calf" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-2.0944"
+      upper="2.0944"
+      effort="180"
+      velocity="15" />
+  </joint>
+  <link
+    name="L_toe">
+    <inertial>
+      <origin
+        xyz="0.01467983 0.01551445 -0.03559656"
+        rpy="0 0 0" />
+      <mass
+        value="0.52014109" />
+      <inertia
+        ixx="0.00014231"
+        ixy="5.2E-07"
+        ixz="2.557E-05"
+        iyy="0.00162054"
+        iyz="-5E-08"
+        izz="0.00168525" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_toe.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/L_toe.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L_toe_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 -0.35"
+      rpy="0 0 0" />
+    <parent
+      link="L_calf" />
+    <child
+      link="L_toe" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-0.7854"
+      upper="0.69813"
+      effort="34"
+      velocity="8.5" />
+  </joint>
+  <link
+    name="R_hip">
+    <inertial>
+      <origin
+        xyz="-0.076146 0 -0.055914"
+        rpy="0 0 0" />
+      <mass
+        value="1.5262" />
+      <inertia
+        ixx="0.0046117"
+        ixy="2E-08"
+        ixz="-0.0016412"
+        iyy="0.0052735"
+        iyz="1.6E-07"
+        izz="0.0033606" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_hip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_hip_joint"
+    type="fixed">
+    <origin
+      xyz="0 -0.1175 -0.0067"
+      rpy="0 0 0" />
+    <parent
+      link="Pelvis" />
+    <child
+      link="R_hip" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.61087"
+      upper="0.7854"
+      effort="120"
+      velocity="23" />
+  </joint>
+  <link
+    name="R_hip2">
+    <inertial>
+      <origin
+        xyz="0.068139 0.057497 -0.014589"
+        rpy="0 0 0" />
+      <mass
+        value="1.3384" />
+      <inertia
+        ixx="0.0022183"
+        ixy="-0.00067108"
+        ixz="0.00026537"
+        iyy="0.0033688"
+        iyz="0.00016238"
+        izz="0.0029916" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_hip2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_hip2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_hip2_joint"
+    type="fixed">
+    <origin
+      xyz="-0.0763 0 -0.084"
+      rpy="0 0 0" />
+    <parent
+      link="R_hip" />
+    <child
+      link="R_hip2" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.5236"
+      upper="0.69813"
+      effort="120"
+      velocity="23" />
+  </joint>
+  <link
+    name="R_thigh">
+    <inertial>
+      <origin
+        xyz="2.011E-05 -0.019972 -0.086489"
+        rpy="0 0 0" />
+      <mass
+        value="4.91" />
+      <inertia
+        ixx="0.078797"
+        ixy="-3.9E-07"
+        ixz="-8.53E-06"
+        iyy="0.079305"
+        iyz="0.0022363"
+        izz="0.0097844" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_thigh.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_thigh_joint"
+    type="fixed">
+    <origin
+      xyz="0.081 0.0148 -0.0185"
+      rpy="0 0 0" />
+    <parent
+      link="R_hip2" />
+    <child
+      link="R_thigh" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-2.4435"
+      upper="0.34907"
+      effort="120"
+      velocity="23" />
+  </joint>
+  <link
+    name="R_calf">
+    <inertial>
+      <origin
+        xyz="2.873E-05 -0.016065 -0.085084"
+        rpy="0 0 0" />
+      <mass
+        value="1.4" />
+      <inertia
+        ixx="0.018004"
+        ixy="2.57E-06"
+        ixz="5.17E-06"
+        iyy="0.018378"
+        iyz="1.435E-05"
+        izz="0.00086118" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_calf.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_calf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_calf_joint"
+    type="fixed">
+    <origin
+      xyz="0 -0.00025 -0.35"
+      rpy="0 0 0" />
+    <parent
+      link="R_thigh" />
+    <child
+      link="R_calf" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-2.0944"
+      upper="2.0944"
+      effort="180"
+      velocity="15" />
+  </joint>
+  <link
+    name="R_toe">
+    <inertial>
+      <origin
+        xyz="0.01467983 -0.01548555 -0.03559656"
+        rpy="0 0 0" />
+      <mass
+        value="0.52014" />
+      <inertia
+        ixx="0.00014231"
+        ixy="5.2E-07"
+        ixz="2.557E-05"
+        iyy="0.00162054"
+        iyz="-5E-08"
+        izz="0.00168525" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_toe.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://250723_wholebody_4dof/meshes/R_toe.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R_toe_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 -0.35"
+      rpy="0 0 0" />
+    <parent
+      link="R_calf" />
+    <child
+      link="R_toe" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-0.7854"
+      upper="0.69813"
+      effort="34"
+      velocity="8.5" />
+  </joint>
+</robot>

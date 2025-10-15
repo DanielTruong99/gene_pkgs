@@ -1,0 +1,63 @@
+joint_planner:
+  ros__parameters:
+    hw:
+      joint_names:
+        - "R_hip_joint"
+        - "R_hip2_joint"
+        - "R_thigh_joint"
+        - "R_calf_joint"
+        - "L_hip_joint"
+        - "L_hip2_joint"
+        - "L_thigh_joint"
+        - "L_calf_joint"
+        - "L_toe_joint"
+        - "R_toe_joint"
+
+    model:
+      action_dim: 10
+      # observation_dim: 41
+      observation_dim: 45
+      action_scale: 1.0
+      # default_joint_positions: [0.0, 0.0, 0.0, 0.0, 0.51, 0.51, -0.85, -0.85, 0.6, 0.6]
+      # default_joint_positions: [0.0, 0.0, 0.0, 0.0, 0.55, 0.55, -1.0, -1.0, 0.45, 0.45]
+      default_joint_positions: [0.0, 0.0, 0.2, -0.25, 0.1, 0.0, 0.0, 0.2, -0.25, 0.1]
+
+      joint_names:
+        - "L_hip_joint"
+        - "L_hip2_joint"
+        - "L_thigh_joint"
+        - "L_calf_joint"
+        - "L_toe_joint"
+        - "R_hip_joint"
+        - "R_hip2_joint"
+        - "R_thigh_joint"
+        - "R_calf_joint"
+        - "R_toe_joint"
+
+      cmd_limits:
+        max_linear_velocity_x: 1.5   # m/s
+        max_linear_velocity_y: 0.5   # m/s
+        max_angular_velocity:  1.0   # rad/s
+      
+      policy_file_path: "/home/gene/DanielWorkspace/ros2_ws/src/joint_planner/src/RLPolicy/policy.onnx"
+      device: "cpu"
+      control_rate_hz: 50.0         # Hz
+  
+      gains:
+        # kps: [30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0]
+        # kds: [ 5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0]
+        # kps: [45.0, 45.0, 45.0, 45.0, 45.0, 45.0, 45.0, 45.0, 45.0, 45.0]
+        # kds: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 0.8, 0.8]
+        kps: [100.0, 100.0, 100.0, 300.0, 100.0, 100.0, 100.0, 300.0, 20.0, 20.0]
+        kds: [  3.5,   3.5,   3.5,   7.5,   3.5,   3.5,   3.5,   7.5,  1.5,  1.5]
+
+    default_gains:
+      kps: [100.0, 100.0, 100.0, 300.0, 100.0, 100.0, 100.0, 300.0, 20.0, 20.0]
+      kds: [  3.5,   3.5,   3.5,   7.5,   3.5,   3.5,   3.5,   7.5,  1.5,  1.5] 
+      
+    positions:
+      standing: [0.0, 0.0, 0.2, -0.34, 0.0, 0.0, 0.2, -0.34, 0.2, 0.2]
+      default: [0.0, 0.0, 0.2, -0.25, 0.0, 0.0, 0.2, -0.25, 0.1, 0.1]
+      kneeling: [0.0, 0.0, 0.0, 0.0, -0.5735, -0.5735, 1.147, 1.147, -0.5735, -0.5735]
+
+    
