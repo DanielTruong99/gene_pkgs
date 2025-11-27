@@ -1,0 +1,79 @@
+joint_planner:
+  ros__parameters:
+    model:
+      action_dim: 10
+      observation_dim: 450 # 45 * 10
+      observation_history_length: 10
+      action_scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+      default_joint_positions:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+
+      joint_names:
+        - "L_hip_joint"
+        - "L_hip2_joint"
+        - "L_thigh_joint"
+        - "L_calf_joint"
+        - "L_toe_joint"
+        - "R_hip_joint"
+        - "R_hip2_joint"
+        - "R_thigh_joint"
+        - "R_calf_joint"
+        - "R_toe_joint"
+
+      gains:
+        kps: [200.0, 200.0, 200.0, 200.0, 200.0, 200.0, 200.0, 200.0, 50.0, 50.0]
+        kds: [ 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+
+      cmd_limits:
+        max_linear_velocity_x: 0.3   # m/s
+        max_linear_velocity_y: 0.0   # m/s
+        max_angular_velocity:  1.0   # rad/s
+      
+      policy_file_path: "/home/gene/DanielWorkspace/ros2_ws/src/joint_planner/src/RLPolicy/exported_policy/latest/policy_latest_kp200_kd5.onnx"
+      device: "cpu"
+      control_rate_hz: 50.0         # Hz
+  
+    hw:
+      joint_names:
+        - "R_hip_joint"
+        - "R_hip2_joint"
+        - "R_thigh_joint"
+        - "R_calf_joint"
+        - "L_hip_joint"
+        - "L_hip2_joint"
+        - "L_thigh_joint"
+        - "L_calf_joint"
+        - "L_toe_joint"
+        - "R_toe_joint" 
+ 
+
+    default_gains:
+      kps: [200.0, 200.0, 200.0, 200.0, 200.0, 200.0, 200.0, 200.0, 50.0, 50.0]
+      kds: [ 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+
+      
+    positions:
+      standing: [0.0, 0.0, 0.2, -0.34, 0.0, 0.0, 0.2, -0.34, 0.2, 0.2]
+      default: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      kneeling: [0.0, 0.0, 0.0, 0.0, -0.5735, -0.5735, 1.147, 1.147, -0.5735, -0.5735]
+
+    

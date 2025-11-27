@@ -15,6 +15,52 @@
 
 namespace planner_sm
 {
+    class LPF 
+    {
+        public:
+            LPF(float cutoff_hz, float dt, size_t dim)
+            {
+                set_params(cutoff_hz, dt);
+                _y.assign(dim, 0.0f);
+                _initialized = false;
+            }
+
+            void set_params(float cutoff_hz, float dt)
+            {
+                float rc = 1.0f / (2.0f * static_cast<float>(M_PI) * cutoff_hz);
+                _alpha = dt / (dt + rc);
+            }
+
+            void set_init(const std::vector<float>& init)
+            {
+                _y = init;
+                _initialized = true;
+            }
+
+            // One filter step
+            const std::vector<float>& step(const std::vector<float>& x)
+            {
+                if (!_initialized) 
+                {
+                    _y = x;
+                    _initialized = true;
+                } 
+                else 
+                {
+                    for (size_t index = 0; index < x.size(); index++)
+                        _y[index] += _alpha * (x[index] - _y[index]);
+                }
+                return _y;
+            }
+
+            // Get the current filtered output
+            const std::vector<float>& value() const { return _y; }
+
+        private:
+            float _alpha{0.0f};
+            std::vector<float> _y;
+            bool _initialized{false};
+    };   
 
     using namespace fsm;
     using namespace event_manager;
@@ -70,7 +116,7 @@ namespace planner_sm
             
             bool _start_rl = false;
             bool _is_walk = false;
-            float _alpha = 0.4f; // lpf coeff
+            float _alpha = 0.3f; // lpf coeff
 
         /* Default gains used for standing without rl */
         private:
@@ -124,6 +170,8 @@ namespace planner_sm
             }
 
     };
+
+ 
     
 } // namespace planner_sm
 

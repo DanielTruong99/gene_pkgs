@@ -12,14 +12,11 @@ namespace planner_sm
                 RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Initial state");
 
                 /* get default gains set up from ros parameters */
-                RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Initial state %d", 10);
                 _node->declare_parameter("default_gains.kps", std::vector<double>(_rl->cfg().action_dim, 0.0f));
                 std::vector<double> tmp;
                 _default_kps.reserve(_rl->cfg().action_dim);
                 _node->get_parameter("default_gains.kps", tmp);
                 _default_kps.assign(tmp.begin(), tmp.end());
-
-                RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Initial state ok");
 
                 _node->declare_parameter("default_gains.kds", std::vector<double>(_rl->cfg().action_dim, 0.0f));
                 _default_kds.reserve(_rl->cfg().action_dim);
@@ -100,20 +97,22 @@ namespace planner_sm
 
             case Signal::TIMEOUT_3S_SIG:
             {
-            //    if(_robot_interface->is_ready())
-            //    {
-            //         _state = (fsm::FSM::StateHandler)&PlannerStateMachine::pre_planning_state;
-            //         status = fsm::Status::TRAN_STATUS;
-            //         break;
-            //    }
-            //    else
-            //    {
-            //         status = fsm::Status::HANDLED_STATUS;
-            //         break;
-            //    }
-                _state = (fsm::FSM::StateHandler)&PlannerStateMachine::pre_planning_state;
-                status = fsm::Status::TRAN_STATUS;
-                break;
+               if(_robot_interface->is_ready())
+               {
+                    _state = (fsm::FSM::StateHandler)&PlannerStateMachine::pre_planning_state;
+                    status = fsm::Status::TRAN_STATUS;
+                    RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: All sensors OK!");
+                    break;
+               }
+               else
+               {
+                    status = fsm::Status::HANDLED_STATUS;
+                    RCLCPP_WARN(_node->get_logger(), "PlannerStateMachine: Sensor non-OK!");
+                    break;
+               }
+                // _state = (fsm::FSM::StateHandler)&PlannerStateMachine::planning_state;
+                // status = fsm::Status::TRAN_STATUS;
+                // break;
             }
         }
 
@@ -128,6 +127,7 @@ namespace planner_sm
             case Signal::ENTRY_SIG:
             {
                 RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Pre Planning state");
+                RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Moving to zeros state");
                 _start_timer();
                 _counter = 0;
                 _time_end = 7; // seconds
@@ -206,6 +206,7 @@ namespace planner_sm
             case Signal::ENTRY_SIG:
             {
                 RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Planning state");
+                RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Waiting for Starting RL!");
                 _start_timer();
                 _rl_tick = 0;
                 _rl_decim = static_cast<uint16_t>( (1.0 / _sampling_time) / _rl->cfg().control_rate_hz) + 1;
@@ -226,6 +227,20 @@ namespace planner_sm
             {
                 status = fsm::Status::HANDLED_STATUS;
                 _start_rl = true; 
+
+                std::string msg = _is_walk == true ? "Walk" : "Stand";
+                RCLCPP_INFO(_node->get_logger(), "RL enabled!");
+                RCLCPP_INFO(_node->get_logger(), "RL is %s", msg.c_str());
+                break;
+            }
+
+            case Signal::BACK_BUTTON_PRESSED:
+            {
+                status = fsm::Status::HANDLED_STATUS;
+                _is_walk = _is_walk ^ true; 
+
+                std::string msg = _is_walk == true ? "Walk" : "Stand";
+                RCLCPP_INFO(_node->get_logger(), "RL is %s", msg.c_str());
                 break;
             }
 
@@ -268,6 +283,14 @@ namespace planner_sm
                 */                
                 auto q = _robot_interface->get_joint_positions();
                 auto dq = _robot_interface->get_joint_velocities();
+                static bool is_first = true;
+                static std::vector<float> filtered_joint_position_cmds(_rl->cfg().action_dim, 0.0f);
+                if (is_first)
+                {
+                    // filtered_joint_position_cmds = q;
+                    is_first = false;
+                }
+                
                 
 
                 // change hw to rl joint ordered name list
@@ -281,15 +304,33 @@ namespace planner_sm
                 RLPolicy::Inputs obs;
                 obs.base_ang_vel = _robot_interface->get_base_angular_velocity();
                 obs.projected_gravity = _robot_interface->get_proj_g();
-                obs.v_cmds = _robot_interface->get_raw_joystick_cmds();
+                // obs.v_cmds = _robot_interface->get_raw_joystick_cmds();
                 obs.q = q;
                 obs.dq = dq;
 
-                RCLCPP_INFO(_node->get_logger(), "projected_gravity: %f, %f, %f", obs.v_cmds[0], obs.v_cmds[1], obs.v_cmds[2]);
+                if(!_is_walk)
+                {
+                    obs.v_cmds = std::vector<float>{0.0f, 0.0f, 0.0f};
+                }
+                else 
+                {
+                    obs.v_cmds = std::vector<float>{1.0f, 0.0f, 0.0f};
+                }
+
+                // RCLCPP_INFO(_node->get_logger(), "projected_gravity: %f, %f, %f", obs.v_cmds[0], obs.v_cmds[1], obs.v_cmds[2]);
 
                 std::vector<float> joint_position_cmds = _rl->run(obs);
+                
 
                 /* Send the filtered command to the actuator interface */
+                // simple first order filter
+                // float alpha = 0.7f;
+                // for(size_t index = 0; index < filtered_joint_position_cmds.size(); index++)
+                // {
+                //     filtered_joint_position_cmds[index] = alpha * filtered_joint_position_cmds[index] + (1- alpha) * joint_position_cmds[index];
+                // }
+                // joint_position_cmds = filtered_joint_position_cmds;
+
                 // change joint order from rl to hw
                 joint_position_cmds = scatter_rl_to_hw<float>(joint_position_cmds, rl_to_hw, hw_joint_names.size(), 0.0);
                 static auto rl_kps = _rl->cfg().rl_kps;

@@ -1,4 +1,4 @@
-add_library(planner_sm STATIC StateMachine.h StateMachine_DataCollection.cpp)
+add_library(planner_sm STATIC StateMachine_ControlledYaw_History_Obs.h StateMachine_ControlledYaw_History_Obs.cpp)
 
 target_include_directories(planner_sm PUBLIC fsm actuator_interface data_interface event_manager planner rl_policy ${CMAKE_CURRENT_SOURCE_DIR})
 ament_target_dependencies(planner_sm

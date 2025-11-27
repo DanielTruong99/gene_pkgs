@@ -67,7 +67,7 @@ class RemoteControllerNode : public rclcpp::Node
                     _key_info_pub->publish(key_info_msg);
                 } 
                 else 
-        {
+                {
                     // Key is released
                     key_info_msg.key_value = _key_value;
                     key_info_msg.key_event = "KEY_RELEASED";

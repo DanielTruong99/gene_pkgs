@@ -102,8 +102,8 @@ def generate_launch_description():
         launch_remote_controller,
 
         # Foxglove bridge
-        port_arg,
-        address_arg,
-        rosbridge_node,
-        rosapi_node
+        # port_arg,
+        # address_arg,
+        # rosbridge_node,
+        # rosapi_node
     ])

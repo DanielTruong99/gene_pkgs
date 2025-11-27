@@ -31,28 +31,66 @@ void ROSDataInterface::imu_callback(const vectornav_msgs::msg::CommonGroup::Shar
     bool is_quat_inf = std::isinf(msg->quaternion.x) || std::isinf(msg->quaternion.y) || std::isinf(msg->quaternion.z) || std::isinf(msg->quaternion.w);
     if(is_angular_inf || is_quat_inf) return;
 
-    static bool is_first_run = true;
-    static const Eigen::Quaternionf qx_pi(
+    /* Define static value */
+    static Eigen::Quaternionf qx_pi(
         Eigen::AngleAxisf(float(M_PI), Eigen::Vector3f::UnitX())
     );
     static Eigen::Quaternionf q_glob_init;
-    if(is_first_run)
+    static Eigen::Quaternionf q_imu_init(1, 0, 0, 0);
+    static Eigen::Quaternionf q_robot_init(1, 0, 0, 0);
+
+    /* Small State Machine for handle first initialize yaw angle */
+    static uint8_t state = 0; // init
+    static uint8_t signal = 0; // entry
+    if((state == 0) && (signal == 0)) // state: init, signal: entry
     {
-        is_first_run = false;
+        // qx_pi.normalize(); if(qx_pi.w() < 0.0f) qx_pi.coeffs() *= -1.0f;
+        signal = 1; 
+        return;
+    }
+    else if((state == 0) && (signal == 1)) // state: init, signal: data coming
+    {
+        static const auto start_time = std::chrono::steady_clock::now();
+        auto time_now = std::chrono::steady_clock::now();
+        std::chrono::duration<double> duration = time_now - start_time;
+        if (duration.count() > 1)
+        {
+            state = 1;
+            signal = 0;
+        }
+        return;
+    }
+    else if((state == 1) && (signal == 0)) // state: configuration, signal: init
+    {
         const float w = msg->quaternion.w, x = msg->quaternion.x, y =msg->quaternion.y, z = msg->quaternion.z;
-        static Eigen::Quaternionf q_imu_init(w, x, y, z);
+        q_imu_init = Eigen::Quaternionf(w, x, y, z);
         q_imu_init.normalize(); if(q_imu_init.w() < 0.0f) q_imu_init.coeffs() *= -1.0f;
-        float yaw = q_imu_init.toRotationMatrix().eulerAngles(0, 1, 2).z();
+        
+        q_robot_init = q_imu_init * qx_pi;
+        q_robot_init.normalize(); if(q_robot_init.w() < 0.0f) q_robot_init.coeffs() *= -1.0f;
+
+        float siny_cosp = 2.0 * (q_robot_init.w() * q_robot_init.z() + q_robot_init.x() * q_robot_init.y());
+        float cosy_cosp = 1.0 - 2.0 * (q_robot_init.y() * q_robot_init.y() + q_robot_init.z() * q_robot_init.z());
+        float yaw = std::atan2(siny_cosp, cosy_cosp);
+
         q_glob_init = Eigen::Quaternionf(
             Eigen::AngleAxisf(yaw, Eigen::Vector3f::UnitZ())
         );
-        q_glob_init = q_glob_init * qx_pi;
+        q_glob_init =  q_glob_init * qx_pi;
         q_glob_init.normalize(); if(q_glob_init.w() < 0.0f) q_glob_init.coeffs() *= -1.0f;
+
+        signal = 1; // move to default
+        return;
     }
 
+    /* Normal case */
     /* Convert quaternion */
-    const float w = msg->quaternion.w, x = msg->quaternion.x, y =msg->quaternion.y, z = msg->quaternion.z;
-    Eigen::Quaternionf q_imu(w, x, y, z);
+    Eigen::Quaternionf q_imu(
+        msg->quaternion.w, 
+        msg->quaternion.x, 
+        msg->quaternion.y, 
+        msg->quaternion.z
+    );
     q_imu.normalize(); if(q_imu.w() < 0.0f) q_imu.coeffs() *= -1.0f;
 
     
@@ -69,6 +107,16 @@ void ROSDataInterface::imu_callback(const vectornav_msgs::msg::CommonGroup::Shar
     Eigen::Vector3f w_imu(msg->angularrate.x, msg->angularrate.y, msg->angularrate.z);
     Eigen::Vector3f w_robot = qx_pi.inverse() * w_imu;
 
+    /* Convert projected g */
+    static const Eigen::Vector3f g_world(0.f, 0.f, -1.f);
+    Eigen::Vector3f g_body = q_robot.conjugate() * g_world;
+
+    /* Compute heading angle */
+    float w = q_robot.w(), x = q_robot.x(), y = q_robot.y(), z = q_robot.z();
+    float siny_cosp = 2.0 * (w * z + x * y);
+    float cosy_cosp = 1.0 - 2.0 * (y * y + z * z);
+    float heading_angle = std::atan2(siny_cosp, cosy_cosp);
+
     // //! Debug imu orientation only
     // #if DEBUG_IMU
     //     geometry_msgs::msg::PoseStamped imu_msg;
@@ -84,6 +132,8 @@ void ROSDataInterface::imu_callback(const vectornav_msgs::msg::CommonGroup::Shar
     /* Data are safe, cache the data */
     _wb[0] = w_robot.x(); _wb[1] = w_robot.y(); _wb[2] = w_robot.z();
     _qw[0] = q_robot.w(); _qw[1] = q_robot.x(); _qw[2] = q_robot.y(); _qw[3] = q_robot.z();
+    _proj_g[0] = g_body.x(); _proj_g[1] = g_body.y(); _proj_g[2] = g_body.z();
+    _yaw_angle = heading_angle;
     _are_all_sensors_recieved[_sensor_state_map["imu"]] = true;
 }
 

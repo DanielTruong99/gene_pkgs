@@ -49,6 +49,7 @@ class ROSDataInterface : public Robot
                 {"imu", 1},
             };
             _are_all_sensors_recieved = std::vector<bool>(_sensor_state_map.size(), false);
+            // _are_all_sensors_recieved[_sensor_state_map["joint_states"]] = true;
         }
         
         bool is_ready() 

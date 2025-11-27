@@ -1,0 +1,79 @@
+joint_planner:
+  ros__parameters:
+    model:
+      action_dim: 10
+      observation_dim: 450 # 45 * 10
+      observation_history_length: 10
+      action_scale:
+        - 0.25
+        - 0.25
+        - 0.25
+        - 0.25
+        - 0.25
+        - 0.25
+        - 0.25
+        - 0.25
+        - 0.25
+        - 0.25
+      default_joint_positions:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+
+      joint_names:
+        - "L_hip_joint"
+        - "L_hip2_joint"
+        - "L_thigh_joint"
+        - "L_calf_joint"
+        - "L_toe_joint"
+        - "R_hip_joint"
+        - "R_hip2_joint"
+        - "R_thigh_joint"
+        - "R_calf_joint"
+        - "R_toe_joint"
+
+      gains:
+        kps: [259.2007619325325, 378.99280900183135, 404.25899626862014, 194.03673835275762, 259.2007619325325, 378.99280900183135, 404.25899626862014, 194.03673835275762, 103.33112606498598, 103.33112606498598]
+        kds: [15.469905943030545,   22.61946710584651,   24.127431579569613,   11.580714768851298,   15.469905943030545,   22.61946710584651,   24.127431579569613,   11.580714768851298,  6.167122308185365,  6.167122308185365]
+
+      cmd_limits:
+        max_linear_velocity_x: 0.35   # m/s
+        max_linear_velocity_y: 0.0   # m/s
+        max_angular_velocity:  1.0   # rad/s
+      
+      policy_file_path: "/home/gene/DanielWorkspace/ros2_ws/src/joint_planner/src/RLPolicy/exported_policy/policy_81cm_10obs_eta15.onnx"
+      device: "cpu"
+      control_rate_hz: 50.0         # Hz
+  
+    hw:
+      joint_names:
+        - "R_hip_joint"
+        - "R_hip2_joint"
+        - "R_thigh_joint"
+        - "R_calf_joint"
+        - "L_hip_joint"
+        - "L_hip2_joint"
+        - "L_thigh_joint"
+        - "L_calf_joint"
+        - "L_toe_joint"
+        - "R_toe_joint" 
+ 
+
+    default_gains:
+      kps: [259.2007619325325, 378.99280900183135, 404.25899626862014, 194.03673835275762, 259.2007619325325, 378.99280900183135, 404.25899626862014, 194.03673835275762, 103.33112606498598, 103.33112606498598]
+      kds: [15.469905943030545,   22.61946710584651,   24.127431579569613,   11.580714768851298,   15.469905943030545,   22.61946710584651,   24.127431579569613,   11.580714768851298,  6.167122308185365,  6.167122308185365]
+
+      
+    positions:
+      standing: [0.0, 0.0, 0.2, -0.34, 0.0, 0.0, 0.2, -0.34, 0.2, 0.2]
+      default: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      kneeling: [0.0, 0.0, 0.0, 0.0, -0.5735, -0.5735, 1.147, 1.147, -0.5735, -0.5735]
+
+    

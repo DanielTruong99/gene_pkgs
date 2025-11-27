@@ -113,6 +113,7 @@ class Robot
             _qw = std::vector<float>(4, 0.0f);
             _proj_g = std::vector<float>(3, 0.0f);
             _raw_v_cmds = std::vector<float>(3, 0.0f);
+            _yaw_angle = 0.0f;
         };
 
     public:
@@ -148,24 +149,10 @@ class Robot
 
         std::vector<float> get_base_quaternion() { return _qw; }
 
-        std::vector<float> get_proj_g()
-        {
-            // _qw is quaternion in Z-down convention [w,x,y,z]
-            const float w = _qw[0], x = _qw[1], y = _qw[2], z = _qw[3];
-            Eigen::Quaternionf q_zup(w, x, y, z);
-            q_zup.normalize();
+        float get_heading_angle() { return _yaw_angle; }
 
-            // Gravity in world (Z-up convention: down is -Z)
-            Eigen::Vector3f g_world(0.f, 0.f, -1.f);
-
-            // Express gravity in body Z-up frame
-            Eigen::Vector3f g_body = q_zup.conjugate() * g_world;
-
-            // Copy into _proj_g
-            _proj_g.resize(3);
-            std::copy_n(g_body.data(), 3, _proj_g.begin());
-            return _proj_g;
-        }
+        std::vector<float> get_proj_g() { return _proj_g; }
+        
         std::vector<float> get_raw_joystick_cmds() {return _raw_v_cmds;}
 
 
@@ -201,6 +188,7 @@ class Robot
         std::vector<float> _rw; // Base position in world frame
         std::vector<float> _qw; // Base quaternion in world frame
         std::vector<float> _proj_g;
+        float _yaw_angle;
 
     protected:
         /* Raw command from joystick */

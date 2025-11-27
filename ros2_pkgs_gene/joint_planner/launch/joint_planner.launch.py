@@ -7,7 +7,7 @@ def generate_launch_description():
     config = os.path.join(
         get_package_share_directory('joint_planner'),
         'config',
-        'robot_controller.yaml'
+        'robot_controller_controlledyaw_latest_2.yaml'
     )
 
     node = Node(

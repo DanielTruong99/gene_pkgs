@@ -81,7 +81,6 @@ namespace planner_sm
             {
                 RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Configuration state");
                 _start_timer();
-                _planner->compute(_sampling_time); // call the compute to get the first position in the trajectory, saved internally
                 status = fsm::Status::HANDLED_STATUS;
                 break;
             }
@@ -89,9 +88,6 @@ namespace planner_sm
             case Signal::EXIT_SIG:
             {
                 _stop_timer();
-                /* all sensors have been received */
-                // auto joint_names = _robot_interface->get_joint_names();
-                // _actuator_interface->set_joint_names(joint_names);
                 status = fsm::Status::HANDLED_STATUS;
                 break;
             }
@@ -131,24 +127,12 @@ namespace planner_sm
                 _time_end = 7; // seconds
                 _max_counter = static_cast<uint16_t>(_time_end / _sampling_time);
 
-                _planner->compute(_sampling_time); 
-                _first_joint_positions_cmds = _planner->get_actions(); //! shape 5
-
-                // _first_joint_positions_cmds.reserve(10);
-                // std::fill(
-                //     _first_joint_positions_cmds.begin(), 
-                //     _first_joint_positions_cmds.end(),
-                //     0.0f
-                // );
-
-                // _first_joint_positions_cmds.reserve(10);
-                // std::copy(
-                //     _default_joint_pos.begin(),
-                //     _default_joint_pos.end(),
-                //     _first_joint_positions_cmds.begin()
-                // );
-
-                // RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Pre Planning state: OK");
+                // Lhip->Lcalf, R_hip->R_calf, Ltoe Rtoe
+                _first_joint_positions_cmds = {
+                    0.0, 0.0, 0.78539816339, -1.57079632679,
+                    0.0, 0.0, 0.78539816339, -1.57079632679, 
+                    0.78539816339, 0.78539816339
+                };
 
                 _first_joint_pos = _robot_interface->get_joint_positions(); //! shape 10
 
@@ -175,14 +159,14 @@ namespace planner_sm
                 std::vector<float> joint_pos_cmds(10, 0.0); //! shape 10
                 float alpha = static_cast<float>(_counter) / _max_counter;
                 static const std::vector<uint8_t> observered_joint_ids = {4, 5, 6, 7, 8}; // left leg joints
-                // for(size_t index = 0; index < _first_joint_pos.size(); index++)
-                // {
-                //     joint_pos_cmds[index] = (1 - alpha) * _first_joint_pos[index] + alpha * _first_joint_positions_cmds[index];
-                // }
-                for(size_t index = 0; index < observered_joint_ids.size(); index++)
+                for(size_t index = 0; index < _first_joint_pos.size(); index++)
                 {
-                    joint_pos_cmds[observered_joint_ids[index]] = (1 - alpha) * _first_joint_pos[observered_joint_ids[index]] + alpha * _first_joint_positions_cmds[index];
+                    joint_pos_cmds[index] = (1 - alpha) * _first_joint_pos[index] + alpha * _first_joint_positions_cmds[index];
                 }
+                // for(size_t index = 0; index < observered_joint_ids.size(); index++)
+                // {
+                //     joint_pos_cmds[observered_joint_ids[index]] = (1 - alpha) * _first_joint_pos[observered_joint_ids[index]] + alpha * _first_joint_positions_cmds[index];
+                // }
 
                 /* Send the filtered command to the actuator interface */
                 _actuator_interface->send_command(joint_pos_cmds);
@@ -245,39 +229,67 @@ namespace planner_sm
                     break;
                 }
 
-                /* Eclipsoid trajectory */
-                if(_planner->is_trajectory_completed())
-                {
-                    /* Planner plan for 1 trajectory is reached, transient to finished state */
-                    _state = (fsm::FSM::StateHandler)&PlannerStateMachine::finished_state;
-                    status = fsm::Status::TRAN_STATUS;
-                    break;
-                }
-
+            
 
                 /* Normal case, perform planning
                     Compute joint commands and send joint commands
                 */                
-                std::vector<float> joint_position_cmds = _planner->compute(_sampling_time);
-
                 /* Chirp signal */
-                // static float t0 = _counter * _sampling_time;
-                // float t = _counter * _sampling_time;
-                // static float f0 = 0.01;
-                // static float fT = 10.0;
-                // static float T = 20.0;
-                // static std::vector<float> A_min = {-0.1, -0.2, 0.3, -1.3, 0.25};
-                // static std::vector<float> A_max = {0.1, 0.2, 0.95, -0.7, 0.7};
-                // // ! joint_position_cmds shape = 5
-                // std::vector<float> joint_position_cmds = planner::chirp_signal(
-                //     t0, 
-                //     t,
-                //     T, 
-                //     f0,
-                //     fT, 
-                //     A_min,
-                //     A_max
-                // );
+                // This chirp signal osilcate around current joint position
+                static int index = 1;
+                static std::vector<int> observered_ids = {8, 3, 6, 5, 4}; // toe -> hip
+                static std::vector<std::vector<float>> gains = {
+                    {45.0, 0.8},
+                    {45.0, 1.5},
+                    {45.0, 1.5},
+                    {45.0, 1.5},
+                    {45.0, 1.5},
+                }; 
+                static std::vector<std::vector<float>> chirp_amplitudes = {
+                    {-0.5346, 0.5346}, // toe Amin Amax
+                    {-0.685, 0.685},
+                    {-0.5677, 0.5677},
+                    {-0.3, 0.3},
+                    {-0.3, 0.3}
+                };
+                static std::vector<float> init_q = {
+                    0.78539816339,
+                    -0.885,
+                    0.2177,
+                    0.15,
+                    0.0
+                };
+
+                static std::vector<float> init_phases = {
+                    0.0,
+                    1.57079632679,
+                    -1.57079632679,
+                    0.523,
+                    0.0
+                };
+                static std::vector<std::vector<float>> f = {
+                    {0.01, 1.5}, // f0, f1 toe
+                    {0.01, 1.5}, // f0, f1 calf
+                    {0.01, 1.5}, // f0, f1 thigh
+                    {0.01, 1.5}, // f0, f1 hip2
+                    {0.01, 1.5}, // f0, f1 hip
+                };
+                static float T = 30.0;
+                float c = (f[index][1] - f[index][0]) / T;
+      
+                static bool is_first = true;
+                static std::vector<float> joint_position_cmds;
+                if(is_first)
+                {
+                    joint_position_cmds = _robot_interface->get_joint_positions();
+                    is_first = false;
+                }
+                
+                float t = _counter * _sampling_time;
+                float signal = init_q[index] + 0.5 * (chirp_amplitudes[index][0] - chirp_amplitudes[index][1]) * std::sin(
+                    init_phases[index] + 2.0f * 3.14159 * (0.5 * c * t * t + f[index][0] * t)
+                );
+                joint_position_cmds[observered_ids[index]] = signal;
 
 
                 /* Check valid joint cmds */
@@ -290,26 +302,26 @@ namespace planner_sm
                     break;
                 }
 
-                // /* Update counter - Chirp signal*/
-                // _counter++;
-                // if(t > T)
-                // {
-                //     /* Planner plan for 1 trajectory is reached, transient to finished state */
-                //     _state = (fsm::FSM::StateHandler)&PlannerStateMachine::finished_state;
-                //     status = fsm::Status::TRAN_STATUS;
-                //     break;
-                // }
-
-                /* Send the filtered command to the actuator interface */
-                static const std::vector<uint8_t> observered_joint_ids = {4, 5 ,6, 7, 8}; // left leg joints
-                static std::vector<float> hw_joint_position_cmds(10, 0.0); //! shape 10
-                for(size_t index = 0; index < observered_joint_ids.size(); index++)
+                if(t > T)
                 {
-                    hw_joint_position_cmds[observered_joint_ids[index]] = joint_position_cmds[index];
+                    _state = (fsm::FSM::StateHandler)&PlannerStateMachine::configuration_state;
+                    status = fsm::Status::TRAN_STATUS;
+                    is_first = true;
+                    _counter = 0.0;
+                    index++;
+                    index = index > (observered_ids.size() - 1) ? 0 : index;
+                    break;
                 }
-                
-                _actuator_interface->send_command(hw_joint_position_cmds);
-                _actuator_interface->send_command_debug(hw_joint_position_cmds);
+                _counter++;
+
+                /* Send the filtered command to the actuator interface */ 
+                std::vector<float> kps = _default_kps;
+                std::vector<float> kds = _default_kds;
+                kps[observered_ids[index]] = gains[index][0];
+                kds[observered_ids[index]] = gains[index][1];
+                _actuator_interface->set_gains(kps, kds);
+                _actuator_interface->send_command(joint_position_cmds);
+                _actuator_interface->send_command_debug(joint_position_cmds);
                 status = fsm::Status::HANDLED_STATUS;
                 break;
             }
@@ -327,7 +339,6 @@ namespace planner_sm
             {
                 RCLCPP_INFO(_node->get_logger(), "PlannerStateMachine: Finished state");
                 _start_timer();
-                _planner->change_trajectory();
                 status = fsm::Status::HANDLED_STATUS;
                 status = fsm::Status::HANDLED_STATUS;
                 break;
@@ -344,7 +355,7 @@ namespace planner_sm
             {
                 /* Transient to configuration state */
                 _state = (fsm::FSM::StateHandler)&PlannerStateMachine::configuration_state;
-                status = fsm::Status::HANDLED_STATUS;
+                status = fsm::Status::TRAN_STATUS;
                 break;
             }
             // case Signal::START_BUTTON_3S:

@@ -99,7 +99,7 @@ def generate_launch_description():
 
         # Logging and remote controller
         # rosbag2,
-        # launch_remote_controller,
+        launch_remote_controller,
 
         # # Foxglove bridge
         # port_arg,
